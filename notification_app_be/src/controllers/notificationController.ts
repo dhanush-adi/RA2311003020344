@@ -10,7 +10,7 @@ import {
 } from "../services/notificationService";
 import { getPriorityInbox } from "../services/priorityInboxService";
 import { NotificationCategory, ApiResponse } from "../types";
-import { createLogger } from "../../../logging_middleware/src";
+import { createLogger } from "logging-middleware";
 
 const ctrlLogger = createLogger(
   "backend",

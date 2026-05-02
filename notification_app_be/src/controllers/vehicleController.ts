@@ -3,7 +3,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import { EvalDepot, EvalVehicle, DepotScheduleResult } from "../types";
-import { createLogger } from "../../../logging_middleware/src";
+import { createLogger } from "logging-middleware";
 
 const schedLogger = createLogger(
   "backend",

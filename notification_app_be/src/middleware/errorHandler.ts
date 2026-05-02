@@ -1,7 +1,7 @@
 // src/middleware/errorHandler.ts — Global Express error handler
 
 import { Request, Response, NextFunction } from "express";
-import { createLogger } from "../../../logging_middleware/src";
+import { createLogger } from "logging-middleware";
 
 const errLogger = createLogger(
   "backend",

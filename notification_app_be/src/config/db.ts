@@ -1,7 +1,7 @@
 // src/config/db.ts — PostgreSQL connection pool with logging
 
-import { Pool, PoolConfig } from "pg";
-import { createLogger } from "../../logging_middleware/src";
+import { Pool } from "pg";
+import { createLogger } from "logging-middleware";
 
 const dbLogger = createLogger(
   "backend",
@@ -9,19 +9,16 @@ const dbLogger = createLogger(
   process.env.EVAL_API_BASE
 );
 
-const poolConfig: PoolConfig = {
-  host:     process.env.DB_HOST     ?? "localhost",
-  port:     parseInt(process.env.DB_PORT ?? "5432", 10),
-  database: process.env.DB_NAME     ?? "campus_notifications",
-  user:     process.env.DB_USER     ?? "postgres",
-  password: process.env.DB_PASSWORD ?? "postgres",
-  min:      parseInt(process.env.DB_POOL_MIN ?? "2", 10),
-  max:      parseInt(process.env.DB_POOL_MAX ?? "10", 10),
-  idleTimeoutMillis:    30000,
+// Use Unix Socket for the demo environment to bypass SASL/password issues
+export const dbPool = new Pool({
+  host: "/var/run/postgresql",
+  port: 5432,
+  database: "campus_notifications",
+  user: "cobra",
+  max: 10,
+  idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
-};
-
-export const dbPool = new Pool(poolConfig);
+});
 
 dbPool.on("connect", () => {
   dbLogger.debug("db", "New DB connection established from pool");

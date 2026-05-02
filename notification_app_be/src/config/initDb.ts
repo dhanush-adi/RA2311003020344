@@ -13,7 +13,7 @@ async function initDatabase(): Promise<void> {
     port:     parseInt(process.env.DB_PORT ?? "5432", 10),
     database: process.env.DB_NAME     ?? "campus_notifications",
     user:     process.env.DB_USER     ?? "postgres",
-    password: process.env.DB_PASSWORD ?? "postgres",
+    password: process.env.DB_PASSWORD || undefined,
   });
 
   const schemaPath = path.join(__dirname, "schema.sql");

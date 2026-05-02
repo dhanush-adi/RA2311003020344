@@ -16,7 +16,7 @@ import {
   NotificationFeedItem,
   PaginationMeta,
 } from "../types";
-import { createLogger } from "../../../logging_middleware/src";
+import { createLogger } from "logging-middleware";
 
 const svcLogger = createLogger(
   "backend",

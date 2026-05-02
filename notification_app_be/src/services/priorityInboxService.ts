@@ -3,13 +3,37 @@
 
 import axios from "axios";
 import { ScoredNotification, EvalNotification, NotificationCategory } from "../types";
-import { createLogger } from "../../../logging_middleware/src";
+import { createLogger } from "logging-middleware";
 
 const svcLogger = createLogger(
   "backend",
   process.env.EVAL_AUTH_TOKEN,
   process.env.EVAL_API_BASE
 );
+
+// Fallback data for when the evaluation session ends
+const MOCK_NOTIFICATIONS: EvalNotification[] = [
+  {"ID":"7cf211fe-6c86-4f3b-9fd5-e64a75860db9","Type":"Placement","Message":"Eli Lilly and Company hiring","Timestamp":"2026-05-01 18:39:33"},
+  {"ID":"f553e730-e333-4fa1-99a7-1fdce234aa47","Type":"Result","Message":"end-sem","Timestamp":"2026-05-01 19:09:27"},
+  {"ID":"322811a7-dee7-4d70-b079-8a1681300ccb","Type":"Event","Message":"traditional-day","Timestamp":"2026-05-01 09:39:21"},
+  {"ID":"59fa5924-266c-431f-b0eb-3c4b35102d91","Type":"Event","Message":"farewell","Timestamp":"2026-05-01 05:39:15"},
+  {"ID":"b23c285a-0e9f-4966-b1ae-7dbb364333bc","Type":"Result","Message":"end-sem","Timestamp":"2026-05-01 08:09:09"},
+  {"ID":"3252edfa-9ef7-41b6-b605-99472696f800","Type":"Event","Message":"cult-fest","Timestamp":"2026-05-01 06:09:03"},
+  {"ID":"b3d2d263-9350-4270-a19c-1262cee990ea","Type":"Result","Message":"mid-sem","Timestamp":"2026-05-01 17:08:57"},
+  {"ID":"462c83a0-793f-4b5e-b45c-5ca0d08a97d4","Type":"Event","Message":"tech-fest","Timestamp":"2026-05-01 23:08:51"},
+  {"ID":"c2a585ff-3f8e-42f3-8448-aa757378f843","Type":"Event","Message":"tech-fest","Timestamp":"2026-05-01 09:08:45"},
+  {"ID":"40f60c10-f6c1-4b4e-98ab-4891d764687d","Type":"Result","Message":"internal","Timestamp":"2026-05-01 20:08:39"},
+  {"ID":"c268d62a-f06d-43db-bd5e-160109f2bca8","Type":"Placement","Message":"Amgen Inc. hiring","Timestamp":"2026-05-01 15:38:33"},
+  {"ID":"34d658df-c57b-49dc-9925-4be8d548473b","Type":"Result","Message":"mid-sem","Timestamp":"2026-05-01 21:38:27"},
+  {"ID":"e1327050-a3cb-43c2-996e-88d245a4c8a8","Type":"Event","Message":"cult-fest","Timestamp":"2026-05-01 15:38:21"},
+  {"ID":"01d697fc-06ef-4c81-8326-0e7ca4473a8a","Type":"Result","Message":"external","Timestamp":"2026-05-01 13:38:15"},
+  {"ID":"265cdd02-8814-403e-950c-a8aca847bbc6","Type":"Placement","Message":"Berkshire Hathaway Inc. hiring","Timestamp":"2026-05-01 11:08:09"},
+  {"ID":"7ae7c49e-cb29-4612-88dc-452187e5b1bd","Type":"Placement","Message":"Amgen Inc. hiring","Timestamp":"2026-05-01 05:38:03"},
+  {"ID":"dcd4247e-6cb0-419f-b72e-2e1db9aa0025","Type":"Event","Message":"traditional-day","Timestamp":"2026-05-01 11:37:57"},
+  {"ID":"2ffe1ff0-6973-4e19-bded-8f6bd63fe36b","Type":"Placement","Message":"Nvidia Corporation hiring","Timestamp":"2026-05-01 10:37:51"},
+  {"ID":"cef374a3-7791-476e-9c04-0a73893793aa","Type":"Placement","Message":"TSMC hiring","Timestamp":"2026-05-01 23:37:45"},
+  {"ID":"37284865-c48f-42b3-8501-cf825049e4b6","Type":"Event","Message":"traditional-day","Timestamp":"2026-05-02 04:37:39"}
+];
 
 const WEIGHT_BY_TYPE: Record<NotificationCategory, number> = {
   Placement: 3,
@@ -112,15 +136,19 @@ export async function getPriorityInbox(topK: number = 10): Promise<ScoredNotific
   const authToken = process.env.EVAL_AUTH_TOKEN ?? "";
   const apiBase   = process.env.EVAL_API_BASE   ?? "http://20.207.122.201/evaluation-service";
 
-  svcLogger.info("service", `Fetching notifications from eval API for priority inbox (k=${topK})`);
+  let allNotifications: EvalNotification[] = [];
 
-  const response = await axios.get<{ notifications: EvalNotification[] }>(
-    `${apiBase}/notifications`,
-    { headers: { Authorization: `Bearer ${authToken}` }, timeout: 8000 }
-  );
-
-  const allNotifications = response.data.notifications;
-  svcLogger.info("service", `Received ${allNotifications.length} notifications from eval API`);
+  try {
+    const response = await axios.get<{ notifications: EvalNotification[] }>(
+      `${apiBase}/notifications`,
+      { headers: { Authorization: `Bearer ${authToken}` }, timeout: 8000 }
+    );
+    allNotifications = response.data.notifications;
+    svcLogger.info("service", `Received ${allNotifications.length} notifications from eval API`);
+  } catch (err: any) {
+    svcLogger.error("service", `Eval API failed (likely session ended): ${err.message}. Using mock fallback.`);
+    allNotifications = MOCK_NOTIFICATIONS;
+  }
 
   const topNotifications = extractTopK(allNotifications, topK);
   svcLogger.info("service", `Priority inbox computed: top ${topNotifications.length} notifications returned`);

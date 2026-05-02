@@ -8,7 +8,7 @@ import cors from "cors";
 import http from "http";
 import { Server as SocketIOServer } from "socket.io";
 
-import { createLogger, createRequestLogger } from "../../logging_middleware/src";
+import { createLogger, createRequestLogger } from "logging-middleware";
 import { verifyDbConnection } from "./config/db";
 import { notifRouter }  from "./routes/notificationRoutes";
 import { vehicleRouter } from "./routes/vehicleRoutes";
