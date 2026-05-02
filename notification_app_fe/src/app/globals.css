@@ -1,0 +1,96 @@
+/* globals.css — Campus Notifications Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Colour palette */
+  --color-bg:           #0a0d14;
+  --color-surface:      #111520;
+  --color-surface-2:    #171c2e;
+  --color-border:       rgba(255,255,255,0.08);
+  --color-border-hover: rgba(255,255,255,0.16);
+
+  --color-accent:       #6366f1;
+  --color-accent-glow:  rgba(99,102,241,0.35);
+  --color-accent-soft:  rgba(99,102,241,0.12);
+
+  --color-placement:    #a78bfa;
+  --color-placement-bg: rgba(167,139,250,0.12);
+  --color-result:       #34d399;
+  --color-result-bg:    rgba(52,211,153,0.10);
+  --color-event:        #fb923c;
+  --color-event-bg:     rgba(251,146,60,0.10);
+
+  --color-text-primary:   #f0f2ff;
+  --color-text-secondary: #8b92b8;
+  --color-text-muted:     #4d5480;
+
+  --color-success: #22c55e;
+  --color-error:   #ef4444;
+  --color-warn:    #f59e0b;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Radii */
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Shadows */
+  --shadow-glow: 0 0 30px rgba(99,102,241,0.15);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+ul { list-style: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-surface); }
+::-webkit-scrollbar-thumb { background: var(--color-border-hover); border-radius: var(--radius-full); }
+
+/* Utility classes */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--color-accent-glow); }
+  50%       { box-shadow: 0 0 0 8px transparent; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
