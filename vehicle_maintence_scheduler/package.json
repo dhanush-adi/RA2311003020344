@@ -1,0 +1,20 @@
+{
+  "name": "vehicle-maintenance-scheduler",
+  "version": "1.0.0",
+  "description": "Vehicle Maintenance Scheduler — Affordmed Evaluation (custom knapsack algorithm, no external libraries)",
+  "main": "dist/scheduler.js",
+  "scripts": {
+    "dev": "ts-node src/scheduler.ts",
+    "build": "tsc",
+    "start": "node dist/scheduler.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0"
+  }
+}

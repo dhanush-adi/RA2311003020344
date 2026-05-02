@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+*.json
+!package.json
+!tsconfig.json
+!package-lock.json
+notification_app_fe/.next/
+notification_app_fe/out/
+notification_app_be/dist/
+logging_middleware/dist/
+vehicle_maintence_scheduler/dist/
